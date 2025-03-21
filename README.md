@@ -1,6 +1,7 @@
 # Hybrid Real-Time Crypto Market Analytics
 
-Author: Aleksander Pulla\n
+Author: Aleksander Pulla
+
 Date: 03/21/2025
 
 ### Table of Contents
