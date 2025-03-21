@@ -33,11 +33,15 @@ Date: 03/21/2025
 
 In an era where data-driven decisions are revolutionizing industries, mastering the tools of the Hadoop ecosystem becomes not just advantageous, but imperative. This hands-on project showcases the power and flexibility of the Hadoop ecosystem, particularly focusing on its crucial role in real-time cryptocurrency market analytics. By leveraging Apache Kafka for data ingestion, Apache Spark Streaming for instantaneous processing, Cassandra for rapid analytics, and Hadoop's HDFS for efficient archival, this hybrid solution demonstrates a cost-effective integration between cloud and on-premises infrastructures. Through this hands-on project, you'll explore how each component within the Hadoop ecosystem collaboratively addresses the complexities and immense scale of real-time Big Data analytics — transforming vast streams of cryptocurrency market data into actionable insights.
 
+<br>
+
 ## Solution Architecture
 
 This section outlines a robust, hybrid architecture designed specifically for real-time crypto market analytics. It leverages the powerful capabilities of the Hadoop ecosystem components deployed across both AWS cloud and on-premises infrastructure. In this architecture, real-time cryptocurrency market data from Binance streams continuously into a Kafka cluster, coordinated by Apache Zookeeper for reliability. Apache Spark Streaming processes this incoming data instantly, performing real-time transformations and analytics to deliver immediate insights. Processed data is then simultaneously routed to Cassandra for rapid querying and interactive analysis, while historical data and long-term storage requirements are handled by Hadoop’s HDFS cluster, enabling cost-effective archival and durable storage.
 
 ![Solution Architecture](./images/solution-architecture.png)
+
+<br>
 
 # Prerequisites
 
@@ -47,9 +51,13 @@ This section outlines a robust, hybrid architecture designed specifically for re
 - **Networking & Firewall Rules:** Confirm ports for Kafka, Spark, Cassandra, and HDFS are open and accessible among containers.
 - **Basic Big Data Knowledge:** Familiarity with Hadoop ecosystem, distributed systems, and container orchestration will help in troubleshooting and scaling.
 
+<br>
+
 # Implementation
 
 This section details the practical implementation steps required to deploy the hybrid real-time cryptocurrency market analytics architecture. It is divided into four core subsections: **"Ingestion (Kafka)"** describes real-time streaming from the Binance API to Kafka; **"Processing (Spark Streaming)"** outlines the real-time processing and transformation of data; **"Analysis (Cassandra)"** explains how processed data is analyzed in Cassandra; and **"Archival (HDFS)"** covers the storage and archival of historical data within HDFS.
+
+<br>
 
 ## Ingestion (Kafka)
 
@@ -145,7 +153,8 @@ docker container ps
 
 ![Successful Kafka cluster deployment](./images/successful-kafka-deployment.png)
 
-<a id="#data-ingestion-kafka"></a> 
+<a id="data-ingestion-kafka"></a> 
+
 ### Data Ingestion
 
 After making sure that the Kafka cluster is successfully deployed, it is time to fetch real-time crypto market data and stream into Kafka. For such, we will use Binance’s WebSocketAPI in a Python application.
@@ -205,11 +214,15 @@ The moment the Python script is executed we can notice real-time data coming fro
 
 ![Real-time crypto streaming](./gifs/BinanceStreamingKafka.gif)
 
+<br>
+
 ## Processing (Spark Streaming)
 
 This subsection discusses how Spark Streaming consumes the incoming real-time data from the Kafka cluster, performing transformations and analytical computations. Apache Spark Streaming provides efficient processing through its in-memory, distributed processing framework, ensuring data is rapidly prepared for analytics and storage.
 
-### Cluster Deployment {#cluster-deployment-spark}
+<a id="cluster-deployment-spark"></a> 
+
+### Cluster Deployment
 
 This part details the deployment of a Spark Streaming cluster, outlining the use of Docker Compose to instantiate multiple Spark worker nodes for parallel processing and a master node responsible for orchestrating the workload. Spark's efficient processing capabilities are leveraged to manage high-velocity data from Kafka efficiently. The deployment leverages the official Bitnami Spark Docker image (`bitnami/spark:3.5`) for reliable and streamlined configuration. The Spark Master container (`spark-master`) coordinates job scheduling and workload distribution, providing a web interface on port `8080` and accepting worker connections on port `7077`. Two worker nodes (`spark-worker-1` and `spark-worker-2`) register themselves with the master, each configured with dedicated computational resources (`2 vCPUs` and `4GB RAM`) for parallel, distributed processing. Workers expose individual web interfaces (`8081` and `8082`) for monitoring their resource utilization and job execution status. All components share a Docker bridge network (`spark-net`) to ensure secure internal communication, providing an efficient, scalable, and real-time capable data processing platform.
 
@@ -274,7 +287,9 @@ Finally, when the cluster is up, we can check its successful deployment by openi
 
 ![Spark Master UI](./images/spark-master-ui.png)
 
-### Data Processing {#data-processing-spark}
+<a id="data-processing-spark"></a> 
+
+### Data Processing
 
 After the successful deployment of the Spark cluster, it is time to process real-time streaming data ingested by Kafka brokers.
 
@@ -402,11 +417,17 @@ The `RUNNING` state of the application indicates that our spark job has been suc
 
 ![Spark Job](./images/spark-job.png)
 
+<br>
+
 ## Analysis (Cassandra)
 
 This subsection describes how Cassandra is deployed and integrated within the architecture to analyze real-time processed data. The “Cluster Deployment” part details the setup of a two-node Cassandra cluster using Docker Compose, ensuring high availability and reliable data storage. After that, the “Analysis (Cassandra)” subsection provides the method for ingesting processed data from Spark Streaming into the Cassandra cluster for efficient querying and analytics.
 
-### Cluster Deployment {#cluster-deployment-cassandra}
+
+
+<a id="cluster-deployment-cassandra"></a>
+
+### Cluster Deployment
 
 This part describes the deployment of a highly available, two-node Cassandra cluster using Docker Compose. The deployment begins by configuring the first Cassandra node (`cassandra-1`) using version `4.1`, explicitly defining the container's networking, RPC communication, cluster identification, and data-center specifics. Port `9042` is exposed to facilitate client connections, while port `7000` handles internal cluster communication. The second node (`cassandra-2`) subsequently joins this existing cluster, explicitly referencing the first node as its seed for initial synchronization and gossip communication. Both nodes leverage dedicated volumes (`./cassandra-1` and `./cassandra-2`) to persist data beyond container lifecycles. Additionally, each node is configured with comprehensive health checks (`nodetool status`) and automated restart policies (`on-failure`), ensuring resilience, reliability, and seamless recovery within the Cassandra cluster. 
 
@@ -492,7 +513,9 @@ In the image below, you can see a Python script on the left, which connects to t
 
 ![Sample Cassandra query](./images/sample-cassandra-query.png)
 
-### Data Analysis {#data-analysis-cassandra}
+<a id="data-analysis-cassandra"></a>
+
+### Data Analysis
 
 In above sections we have talked about Spark and the successful processing of it. However, before running Spark, it is very important to first create the keyspace in Cassandra, and then define the schema table according to the data we get from Kafka that ingests from Binance WebSocket API.
 
@@ -520,11 +543,16 @@ Recalling the successful Spark job operation, we can see the data being processe
 
 This data can then be used for analytics purposes regarding the existing trades, discover potential trading patterns, asset behavior and fluctuations during specific period of times, etc.
 
+<br>
+
 ## Archival (HDFS)
 
 This subsection focuses on how to store and manage data long-term using the Hadoop Distributed File System (HDFS). HDFS is ideal for batch processing and archival because it distributes data across multiple nodes, providing fault tolerance and scalability. By archiving data in HDFS, you can offload large or infrequently accessed datasets to a cost-effective and reliable storage layer, ensuring they remain available for future analytics or compliance requirements
 
-### Cluster Deployment {#cluster-deployment-hdfs}
+
+<a id="cluster-deployment-hdfs"></a>
+
+### Cluster Deployment
 
 In this part we will through the process of setting up an HDFS (Hadoop Distributed File System) Docker cluster using Docker Compose (with 1 NameNode and 2 DataNodes).
 
@@ -870,7 +898,10 @@ In terms of the screenshot below, it shows the DataNode Information page within 
 
 ![Datanode Information UI](./images/hdfs-datanode-information-ui.png)
 
-### Data Archival {#data-archival-hdfs}
+
+<a id="data-archival-hdfs"></a>
+
+### Data Archival
 
 Upon the successful operation of Spark job, we can see that within HDFS the `crypto_data/trades` directory has been created by `spark` user.
 
@@ -881,6 +912,8 @@ Once we enter into `trades` sub-directory we can see a lot of parquet files are 
 ![Trades data stored as parquet files](./images/trades-parquet.png)
 
 Such historical and archived data can then be used for different purposes (i.e. comparing current behavior of the asset with the one in the upcoming future).
+
+<br>
 
 # Conclusions
 
