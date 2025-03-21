@@ -3,6 +3,8 @@
 Author: Aleksander Pulla
 Date: 03/21/2025
 
+<br>
+
 ### Table of Contents
 
 1. [Introduction](#introduction)
@@ -24,6 +26,7 @@ Date: 03/21/2025
 4. [Conclusions](#conclusions)
     - [Key Considerations](#key-considerations)
 
+<br>
 
 # Introduction
 
@@ -51,7 +54,8 @@ This section details the practical implementation steps required to deploy the h
 
 This subsection describes the initial ingestion phase of the solution, where real-time market data from the Binance API is streamed into a Kafka cluster. Kafka acts as a highly scalable and fault-tolerant messaging system, reliably capturing and temporarily storing streaming data, enabling downstream real-time processing.
 
-### Cluster Deployment {#cluster-deployment-kafka}
+<a id="cluster-deployment-kafka"></a> 
+### Cluster Deployment
 
 In this part, the deployment of a Kafka cluster using Docker Compose is detailed. The cluster is composed of two Kafka brokers coordinated by a Zookeeper instance. Zookeeper facilitates node coordination, state synchronization, and workload management across Kafka brokers. Each Kafka broker is deployed within Docker containers configured for scalability, reliability, and ease of management. 
 From the `docker-compose.yml` file below we are indicating that the cluster will leverage Confluent's official Docker images (`cp-zookeeper:7.6.1` and `cp-kafka:7.6.1`) for enhanced stability and reliability. Zookeeper is configured to run on port `2181`, providing distributed coordination for Kafka brokers. Two Kafka brokers (`kafka1` and `kafka2`) depend explicitly on Zookeeper for synchronization and metadata management, ensuring high availability and fault tolerance. Each Kafka broker exposes distinct ports (`9092` and `9093`) to prevent conflicts and includes specific configurations to ensure data durability, consistency, and replication across brokers. This streamlined setup enables efficient real-time data ingestion and scalable event-driven architectures.
