@@ -145,7 +145,8 @@ docker container ps
 
 ![Successful Kafka cluster deployment](./images/successful-kafka-deployment.png)
 
-### Data Ingestion {#data-ingestion-kafka}
+<a id="#data-ingestion-kafka"></a> 
+### Data Ingestion
 
 After making sure that the Kafka cluster is successfully deployed, it is time to fetch real-time crypto market data and stream into Kafka. For such, we will use Binance’s WebSocketAPI in a Python application.
 
